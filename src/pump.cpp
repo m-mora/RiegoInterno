@@ -5,13 +5,13 @@
 /**
  * @brief Initialize the array with the pin associated to each relay
  *
- * @param num          Number of relays used
- * @param ...          Pin where is attached.
+ * @param pin          Pin where is attached.
  * @return bool        True on success.
  */
 
 bool Pump::init(int pin) {
   this->pump_pin = pin;
+  pump_on = false;
   return true;
 }
 
@@ -26,11 +26,12 @@ bool Pump::turnOn() {
 }
 
 bool Pump::turnOff() {
-  if (ON) {
+  if (pump_on) {
     Serial.printf("Turning pin %d off\n", pump_pin);
     pump_on = false;
     return true;
   }
+  return false;
 }
 
 bool Pump::status() { return this->pump_on; }

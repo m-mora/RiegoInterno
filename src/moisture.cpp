@@ -15,6 +15,7 @@ int Moisture::read() {
   int value_read = analogRead(pin);
   int constrained_value = constrain(value_read, water_value, dry_value);
   mapped = map(constrained_value, dry_value, water_value, 0, 100);
+  Serial.printf("humidity %d \n", mapped);
   //  return value_read;
   return mapped;
 }

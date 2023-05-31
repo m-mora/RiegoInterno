@@ -6,22 +6,31 @@
 #include "moisture.h"
 #include "pump.h"
 
+typedef struct {
+  bool pump_status;
+  int humidity;
+} plant_status_t;
+
 class plantSet : public Moisture, public Pump {
  public:
   // moisture humidity;
   // Relays pump;
   int duration;
   int threshold;
+  int humidity;
   unsigned long time_started;
+  String name;
 
-  plantSet *next;
+  plantSet* next;
 
   plantSet() {
     this->duration = 0;
     this->threshold = 0;
+    this->humidity = 0;
   }
 
-  void check() {
+  void check_pump() {
+    // Serial.printf("Status %d\n",status());
     if (status()) {
       // pump is on, check for time elapsed
       // and turn off if time has passed
@@ -29,30 +38,31 @@ class plantSet : public Moisture, public Pump {
         turnOff();
         time_started = 0;
       }
-    } else {
-      // pump is off, check the humidity to turn it on if required
-      if (Moisture::read() < threshold) {
-        turnOn();
-        time_started = millis();
-      }
+    }
+  }
+
+  void check() {
+    // Check the humidity to turn it on if required
+    this->humidity = Moisture::read();
+    if ((this->humidity < threshold) && !status()) {
+      turnOn();
+      time_started = millis();
+      Serial.printf("moisture below threshold %d\n", time_started);
     }
   }
 };
 
 class Garden {
  private:
-  plantSet *root;
+  plantSet* root;
 
  public:
   Garden();
 
-  // create a plant
-  // pin = pin where the analog/humidity sensor is connected
-  // relay - pin where the relay/pump is connected
-  // threshold humidity percentage to triger the irrigation
-  // duration - duration in second to leave the pump on
-  void addPlant(int pin, int relay, int threshold, int duration);
+  void addPlant(String name, int pin, int relay, int threshold, int duration);
   void checkPlants();
+  void checkPump();
+  plant_status_t getStatus(String name);
 };
 
 #endif  // __PLANTS_H__

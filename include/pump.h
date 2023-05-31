@@ -5,11 +5,11 @@
 
 #define ON 1
 #define OFF 0
-#define MAX_RELAYS 8
+// #define MAX_RELAYS 8
 
 class Pump {
  private:
-  bool pump_on = false;
+  bool pump_on;
   uint8_t pump_pin;
 
  public:
