@@ -6,10 +6,10 @@
 
 #define CHECK_PERIOD 600  // 600 = 10min
 // pins to connect  moisture sensors
-#define SELECT0 4
-#define SELECT1 5
-#define SELECT2 9
-#define SELECT3 10
+#define SENSOR0 4
+#define SENSOR1 5
+#define SENSOR2 9
+#define SENSOR3 10
 // #define MUX_ENABLE 33
 #define RELAY1 12
 #define RELAY2 13
