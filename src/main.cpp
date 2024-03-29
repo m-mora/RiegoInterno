@@ -1,8 +1,21 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
+#if defined(ESP8266)
+  #include <ESP8266WiFi.h>  //ESP8266 Core WiFi Library         
+#else
+  #include <WiFi.h>         //ESP32 Core WiFi Library    
+#endif
+#if defined(ESP8266)
+  #include <ESP8266WebServer.h>  //Local WebServer used to serve the configuration portal
+#else
+  #include <WebServer.h>         //Local DNS Server used for redirecting all requests to the configuration portal 
+#endif
 
-#include "plants.h"
+#include <DNSServer.h> //Local WebServer used to serve the configuration portal 
+#include <WiFiManager.h>
+
+#include "garden.h"
 
 #define CHECK_PERIOD 600  // 600 = 10min
 // pins to connect  moisture sensors
@@ -103,7 +116,22 @@ void setup() {
   timerAlarmEnable(timer1);
 
   disable_system = false;
+  // Set the pin where the water container sensor will be connected
   pinMode(WATER_SENSOR_PIN, INPUT_PULLUP);
+
+  // Create a wifiManager instance
+  WiFiManager wm;
+  // Remove comments to reset configuration
+  //wifiManager.resetSettings();
+ 
+  // Create AP portal and check if connected
+  if(!wm.autoConnect("ESPRiego")){
+    Serial.println("Fail connecting (timeout)");
+    ESP.restart();
+    delay(1000);
+  }
+  Serial.println("Connection succesful");
+
   // Analog pin, digital pin to relay, humidity threshold, seconds on
   garden.addPlant(plant1, A0, RELAY1, 30, 10);
   garden.addPlant(plant2, A3, RELAY2, 30, 10);

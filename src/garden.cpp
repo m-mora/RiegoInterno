@@ -1,4 +1,4 @@
-#include "plants.h"
+#include "garden.h"
 
 #include <LiquidCrystal_I2C.h>
 
