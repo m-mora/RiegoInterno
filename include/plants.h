@@ -52,17 +52,4 @@ class plantSet : public Moisture, public Pump {
   }
 };
 
-class Garden {
- private:
-  plantSet* root;
-
- public:
-  Garden();
-
-  void addPlant(String name, int pin, int relay, int threshold, int duration);
-  void checkPlants();
-  void checkPump();
-  plant_status_t getStatus(String name);
-};
-
 #endif  // __PLANTS_H__
