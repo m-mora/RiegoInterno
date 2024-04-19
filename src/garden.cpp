@@ -4,7 +4,10 @@
 
 extern LiquidCrystal_I2C lcd;
 
-Garden::Garden() { root = nullptr; }
+Garden::Garden() {
+  root = nullptr;
+  this->any_pump_is_on = false;
+}
 
 /*
  * @brief create a plant
@@ -14,10 +17,10 @@ Garden::Garden() { root = nullptr; }
  * @param threshold   humidity percentage to triger the irrigation
  * @param duration    duration in second to leave the pump on
  */
-void Garden::addPlant(String name, int pin, int relay, int threshold,
+void Garden::addPlant(String name, int pin, int v_pin, int relay, int threshold,
                       int duration) {
   plantSet *newNode = new plantSet();
-  newNode->Moisture::init(pin);
+  newNode->Moisture::init(pin, v_pin);
   newNode->Pump::init(relay);
   newNode->duration = duration * 600000;  // stored in miliseconds
   newNode->threshold = threshold;
@@ -63,7 +66,7 @@ plant_status_t Garden::getStatus(String name) {
       continue;
     }
     p_status.humidity = temp->humidity;
-    p_status.pump_status = temp->status();
+    p_status.pump_status = temp->Pump::status();
     temp = temp->next;
   }
   return p_status;

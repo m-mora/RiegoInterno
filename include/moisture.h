@@ -10,13 +10,15 @@ const int water_value = 1040;
 class Moisture {
  private:
   int pin;
+  int v_pin;
 
  public:
-  Moisture(int pin);
+  Moisture(int pin, int v_pin);
   Moisture();
   ~Moisture();
   int read();
-  void init(int pin);
+  bool status();
+  void init(int pin, int v_pin);
 };
 
 #endif  //__MOISTURE_H__

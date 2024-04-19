@@ -16,9 +16,13 @@
  |  9  |  Water sensor reservoir  |
  |  22 |  SCL                     |
  |  21 |  SDA                     |
+ |  25 |  POWER_SENSOR0           |
+ |  26 |  POWER_SENSOR1           |
+ |  27 |  POWER_SENSOR2           |
+ |  14 |  POWER_SENSOR3           |
  ---------------------------------
  */
- 
+
 #include <Arduino.h>
 
 #if defined(ESP8266)
@@ -40,10 +44,14 @@
 
 #define CHECK_PERIOD 600  // 600 = 10min
 // pins to connect  moisture sensors
-#define SENSOR0 A0  // GPIO36 
+#define SENSOR0 A0  // GPIO36
 #define SENSOR1 A3  // GPIO39
 #define SENSOR2 A6  // GPIO34
 #define SENSOR3 A7  // GPIO35
+#define POWER_SENSOR0 25
+#define POWER_SENSOR1 26
+#define POWER_SENSOR2 27
+#define POWER_SENSOR3 14
 // #define MUX_ENABLE 33
 #define RELAY1 4
 #define RELAY2 16
@@ -90,7 +98,7 @@ bool refill_the_tank() {
   if (!digitalRead(RESERVOIR_SENSOR_PIN)) {
     reservoir_pump.turnOff();
   } else {
-    //check if the reservoir pump is on
+    // check if the reservoir pump is on
     if (reservoir_pump.status()) {
       // if it is ON check if thas fill the deposit
       if (!digitalRead(WATER_SENSOR_PIN_TOP)) {
@@ -133,10 +141,10 @@ void init_wifi() {
 
 void init_garden() {
   // Analog pin, digital pin to relay, humidity threshold, seconds on
-  garden.addPlant(plant1, A0, RELAY1, 30, 10);
-  garden.addPlant(plant2, A3, RELAY2, 30, 10);
-  garden.addPlant(plant3, A7, RELAY3, 30, 10);
-  garden.addPlant(plant4, A19, RELAY4, 30, 10);
+  garden.addPlant(plant1, A0, POWER_SENSOR0, RELAY1, 30, 10);
+  garden.addPlant(plant2, A3, POWER_SENSOR1, RELAY2, 30, 10);
+  garden.addPlant(plant3, A7, POWER_SENSOR2, RELAY3, 30, 10);
+  garden.addPlant(plant4, A19, POWER_SENSOR3, RELAY4, 30, 10);
 }
 
 void init_gpio() {
@@ -145,9 +153,7 @@ void init_gpio() {
   pinMode(WATER_SENSOR_PIN, INPUT_PULLUP);
 }
 
-void init_pump () {
-  reservoir_pump.init(RESERVOIR_SENSOR_PIN);
-}
+void init_pump() { reservoir_pump.init(RESERVOIR_SENSOR_PIN); }
 
 void setup() {
   Serial.begin(115200);
@@ -173,8 +179,8 @@ void loop() {
     print_checking();
     // check humidity and turn pump if required.
     garden.checkPlants();
-  } 
-  
+  }
+
   if (disable_system) {
     // if system is disable, means there are not water in the container
     // will try to refill it
