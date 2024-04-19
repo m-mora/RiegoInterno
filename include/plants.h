@@ -31,7 +31,7 @@ class plantSet : public Moisture, public Pump {
 
   void check_pump() {
     // Serial.printf("Status %d\n",status());
-    if (status()) {
+    if (Pump::status()) {
       // pump is on, check for time elapsed
       // and turn off if time has passed
       if ((millis() - time_started) >= (duration)) {
@@ -44,7 +44,7 @@ class plantSet : public Moisture, public Pump {
   void check() {
     // Check the humidity to turn it on if required
     this->humidity = Moisture::read();
-    if ((this->humidity < threshold) && !status()) {
+    if ((this->humidity < threshold) && !Pump::status()) {
       turnOn();
       time_started = millis();
       Serial.printf("moisture below threshold %d\n", time_started);
