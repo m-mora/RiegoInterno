@@ -13,6 +13,7 @@ Garden::Garden() {
  * @brief create a plant
  * @param name        Name of the plant
  * @param pin         pin where the analog/humidity sensor is connected
+ * @param v_pin       pin where the voltage for the sensor is connected
  * @param relay       pin where the relay/pump is connected
  * @param threshold   humidity percentage to triger the irrigation
  * @param duration    duration in second to leave the pump on
@@ -67,7 +68,7 @@ plant_status_t Garden::getStatus(String name) {
     }
     p_status.humidity = temp->humidity;
     p_status.pump_status = temp->Pump::status();
-    temp = temp->next;
+    break;
   }
   return p_status;
 }

@@ -1,13 +1,14 @@
-#include "moisture.h"
-// #include "include/moisture.h"
 #include <Arduino.h>
-
 #include <cstdlib>
 
-Moisture::Moisture(int pin, int v_pin) {
+#include "moisture.h"
+
+
+Moisture::Moisture(int pin, int voltage_for_sensor_pin) {
   this->pin = pin;
-  this->v_pin = v_pin;
-  pinMode(v_pin, OUTPUT);
+  this->voltage_for_sensor_pin = voltage_for_sensor_pin;
+  pinMode(this->pin, INPUT);
+  pinMode(this->voltage_for_sensor_pin, OUTPUT);
 }
 
 Moisture::Moisture() {}
@@ -16,10 +17,10 @@ Moisture::~Moisture() {}
 
 int Moisture::read() {
   int mapped;
-  digitalWrite(v_pin, HIGH);
+  digitalWrite(this->voltage_for_sensor_pin, HIGH);
   delay(10);
   int value_read = analogRead(pin);
-  digitalWrite(v_pin, LOW);
+  digitalWrite(this->voltage_for_sensor_pin, LOW);
   int constrained_value = constrain(value_read, water_value, dry_value);
   mapped = map(constrained_value, dry_value, water_value, 0, 100);
   Serial.printf("humidity %d \n", mapped);
@@ -27,10 +28,11 @@ int Moisture::read() {
   return mapped;
 }
 
-void Moisture::init(int pin, int v_pin) {
+void Moisture::init(int pin, int voltage_for_sensor_pin) {
   this->pin = pin;
-  this->v_pin = v_pin;
-  pinMode(v_pin, OUTPUT);
+  this->voltage_for_sensor_pin = voltage_for_sensor_pin;
+  pinMode(this->pin, INPUT);
+  pinMode(this->voltage_for_sensor_pin, OUTPUT);
 }
 
 bool Moisture::status() { return digitalRead(pin); }

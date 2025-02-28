@@ -13,9 +13,9 @@ class Pump {
   uint8_t pump_pin;
 
  public:
-  bool init(int pin);
-  bool turnOn();
-  bool turnOff();
+  void init(int pin);
+  void turnOn();
+  void turnOff();
   bool status();
 };
 

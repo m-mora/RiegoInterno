@@ -114,7 +114,7 @@ bool refill_the_tank() {
   return false;
 }
 
-void inint_timers() {
+void init_timers() {
   // number of timer, prescalar value, true count up
   timer1 = timerBegin(0, 80, true);
   timerAttachInterrupt(timer1, &check_status, true);
@@ -140,7 +140,7 @@ void init_wifi() {
 }
 
 void init_garden() {
-  // Analog pin, digital pin to relay, humidity threshold, seconds on
+  // plant name, Analog pin, digital pin to relay to turn pump on, humidity threshold, seconds on
   garden.addPlant(plant1, A0, POWER_SENSOR0, RELAY1, 30, 10);
   garden.addPlant(plant2, A3, POWER_SENSOR1, RELAY2, 30, 10);
   garden.addPlant(plant3, A7, POWER_SENSOR2, RELAY3, 30, 10);
@@ -158,7 +158,7 @@ void init_pump() { reservoir_pump.init(RESERVOIR_SENSOR_PIN); }
 void setup() {
   Serial.begin(115200);
 
-  inint_timers();
+  init_timers();
 
   init_gpio();
 
